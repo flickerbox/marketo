@@ -1,6 +1,6 @@
 <?php
 
-// Client for the Marketo SOAP API
+// This is the annotated source for [marketo](http://github.com/flickerbox/marketo), a simple Marketo SOAP client.
 class Marketo
 {
 	// Internal: Marketo API Access Key
