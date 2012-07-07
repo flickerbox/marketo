@@ -1,0 +1,226 @@
+<!DOCTYPE html>  <html> <head>   <title>marketo.php</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               marketo.php             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cp">&lt;?php</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Client for the Marketo SOAP API</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nc">Marketo</span>
+<span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Internal: Marketo API Access Key</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">protected</span> <span class="nv">$user_id</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Internal: Marketo API Secret Key</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">protected</span> <span class="nv">$encryption_key</span><span class="p">;</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Internal: The host name of the soap endpoint, i.e. na-c.marketo.com</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">protected</span> <span class="nv">$soap_host</span><span class="p">;</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Public: Initialize a new Marketo API instance.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span>
+  <span class="p">{</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;MARKETO_USER_ID&#39;</span><span class="p">))</span>
+    <span class="p">{</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">user_id</span> <span class="o">=</span> <span class="nx">MARKETO_USER_ID</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">elseif</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_ENV</span><span class="p">[</span><span class="s1">&#39;MARKETO_USER_ID&#39;</span><span class="p">]))</span>
+    <span class="p">{</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">user_id</span> <span class="o">=</span> <span class="nv">$_ENV</span><span class="p">[</span><span class="s1">&#39;MARKETO_USER_ID&#39;</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s2">&quot;MARKETO_USER_ID missing&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;MARKETO_ENCRYPTION_KEY&#39;</span><span class="p">))</span>
+    <span class="p">{</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">encryption_key</span> <span class="o">=</span> <span class="nx">MARKETO_ENCRYPTION_KEY</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">elseif</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_ENV</span><span class="p">[</span><span class="s1">&#39;MARKETO_ENCRYPTION_KEY&#39;</span><span class="p">]))</span>
+    <span class="p">{</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">encryption_key</span> <span class="o">=</span> <span class="nv">$_ENV</span><span class="p">[</span><span class="s1">&#39;MARKETO_ENCRYPTION_KEY&#39;</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s2">&quot;MARKETO_ENCRYPTION_KEY missing&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;MARKETO_SOAP_HOST&#39;</span><span class="p">))</span>
+    <span class="p">{</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">soap_host</span> <span class="o">=</span> <span class="nx">MARKETO_SOAP_HOST</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">elseif</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_ENV</span><span class="p">[</span><span class="s1">&#39;MARKETO_SOAP_HOST&#39;</span><span class="p">]))</span>
+    <span class="p">{</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">soap_host</span> <span class="o">=</span> <span class="nv">$_ENV</span><span class="p">[</span><span class="s1">&#39;MARKETO_SOAP_HOST&#39;</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s2">&quot;MARKETO_SOAP_HOST missing&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="nv">$soap_end_point</span> <span class="o">=</span> <span class="s2">&quot;https://</span><span class="si">{</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">soap_host</span><span class="si">}</span><span class="s2">/soap/mktows/1_8&quot;</span><span class="p">;</span>
+
+    <span class="nv">$options</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s2">&quot;connection_timeout&quot;</span> <span class="o">=&gt;</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span> <span class="o">=&gt;</span> <span class="nv">$soap_end_point</span><span class="p">);</span>
+    
+    <span class="nv">$wsdl_url</span> <span class="o">=</span> <span class="nv">$soap_end_point</span> <span class="o">.</span> <span class="s1">&#39;?WSDL&#39;</span><span class="p">;</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">soap_client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">soapClient</span><span class="p">(</span><span class="nv">$wsdl_url</span><span class="p">,</span> <span class="nv">$options</span><span class="p">);</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Public: Get a lead record</p>
+
+<p>$type  - The type of ID you would like to look up the lead by. This can 
+         be one of the following:</p>
+
+<ul>
+<li>idnum - The Marketo lead ID</li>
+<li>cookie - The entire <em>mkto</em>trk cookie</li>
+<li>email - The email address of the lead</li>
+<li>sdfccontantid - The Salesforce Contact ID</li>
+<li>sfdcleadid - The Salesforce Lead ID</li>
+</ul>
+
+<p>$value - The value for the key. For example if the $type is email the 
+         $value should be and email address</p>
+
+<p>Examples</p>
+
+<p><code>$client-&gt;get_lead_by('email', 'ben@benubois.com');</code></p>
+
+<p>Returns an object containing lead data or FALSE if no lead was found</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">public</span> <span class="k">function</span> <span class="nf">get_lead_by</span><span class="p">(</span><span class="nv">$type</span><span class="p">,</span> <span class="nv">$value</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="nv">$lead</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;leadKey&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;keyType&#39;</span>  <span class="o">=&gt;</span> <span class="nx">strtoupper</span><span class="p">(</span><span class="nv">$type</span><span class="p">),</span>
+        <span class="s1">&#39;keyValue&#39;</span> <span class="o">=&gt;</span> <span class="nv">$value</span>
+      <span class="p">)</span>
+    <span class="p">);</span>
+
+    <span class="k">try</span> 
+    <span class="p">{</span>
+      <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">&#39;getLead&#39;</span><span class="p">,</span> <span class="nv">$lead</span><span class="p">);</span>
+      <span class="nv">$leads</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">format_leads</span><span class="p">(</span><span class="nv">$result</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">catch</span> <span class="p">(</span><span class="nx">Exception</span> <span class="nv">$e</span><span class="p">)</span> 
+    <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$e</span><span class="o">-&gt;</span><span class="na">detail</span><span class="o">-&gt;</span><span class="na">serviceException</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nv">$e</span><span class="o">-&gt;</span><span class="na">detail</span><span class="o">-&gt;</span><span class="na">serviceException</span><span class="o">-&gt;</span><span class="na">code</span> <span class="o">==</span> <span class="s1">&#39;20103&#39;</span><span class="p">)</span> 
+      <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>No leads were found</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nv">$leads</span> <span class="o">=</span> <span class="k">FALSE</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">else</span>
+      <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="nv">$e</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nv">$leads</span><span class="p">;</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Public: Create or update lead information</p>
+
+<p>$email  - The email address of the lead
+$cookie - The entire <em>mkto</em>trk cookie
+$lead   - Associative array of lead attributes</p>
+
+<p>Examples</p>
+
+<p><code>$client-&gt;sync_lead('ben@benubois.com', $_COOKIE['_mkto_trk'], array('Unsubscribe' -&gt; FALSE));</code></p>
+
+<p>Returns an object containing the updated lead info</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">public</span> <span class="k">function</span> <span class="nf">sync_lead</span><span class="p">(</span><span class="nv">$email</span><span class="p">,</span> <span class="nv">$cookie</span><span class="p">,</span> <span class="nv">$lead</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="nv">$params</span> <span class="o">=</span> <span class="k">new</span> <span class="k">stdClass</span><span class="p">;</span>
+    <span class="nv">$params</span><span class="o">-&gt;</span><span class="na">marketoCookie</span> <span class="o">=</span> <span class="nv">$cookie</span><span class="p">;</span>
+    <span class="nv">$params</span><span class="o">-&gt;</span><span class="na">returnLead</span> <span class="o">=</span> <span class="k">TRUE</span><span class="p">;</span>
+    <span class="nv">$params</span><span class="o">-&gt;</span><span class="na">leadRecord</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lead_record</span><span class="p">(</span><span class="nv">$email</span><span class="p">,</span> <span class="nv">$lead</span><span class="p">);</span>
+      
+    <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">&#39;syncLead&#39;</span><span class="p">,</span> <span class="nv">$params</span><span class="p">);</span>
+    
+    <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$result</span><span class="o">-&gt;</span><span class="na">result</span><span class="p">;</span>
+    <span class="nv">$result</span><span class="o">-&gt;</span><span class="na">leadRecord</span><span class="o">-&gt;</span><span class="na">attributes</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flatten_attributes</span><span class="p">(</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">leadRecord</span><span class="o">-&gt;</span><span class="na">leadAttributeList</span><span class="o">-&gt;</span><span class="na">attribute</span><span class="p">);</span>
+    <span class="nb">unset</span><span class="p">(</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">leadRecord</span><span class="o">-&gt;</span><span class="na">leadAttributeList</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="nv">$result</span><span class="p">;</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Build a lead object for syncing</p>
+
+<p>$email - The email address of the lead
+$lead  - Associative array of lead attributes</p>
+
+<p>Returns an object with the prepared</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">protected</span> <span class="k">function</span> <span class="nf">lead_record</span><span class="p">(</span><span class="nv">$email</span><span class="p">,</span> <span class="nv">$lead_attributes</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="nv">$record</span> <span class="o">=</span> <span class="k">new</span> <span class="k">stdClass</span><span class="p">;</span>
+    <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">Email</span> <span class="o">=</span> <span class="nv">$email</span><span class="p">;</span>
+    <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">leadAttributeList</span> <span class="o">=</span> <span class="k">new</span> <span class="k">stdClass</span><span class="p">;</span>
+    <span class="nv">$record</span><span class="o">-&gt;</span><span class="na">leadAttributeList</span><span class="o">-&gt;</span><span class="na">attribute</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$lead_attributes</span> <span class="k">as</span> <span class="nv">$attribute</span> <span class="o">=&gt;</span> <span class="nv">$value</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="nv">$type</span> <span class="o">=</span> <span class="k">NULL</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Booleans have to be '1' or '0'</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="nb">is_bool</span><span class="p">(</span><span class="nv">$value</span><span class="p">))</span>
+      <span class="p">{</span>
+        <span class="nv">$value</span> <span class="o">=</span> <span class="nb">strval</span><span class="p">(</span><span class="nb">intval</span><span class="p">(</span><span class="nv">$value</span><span class="p">));</span>
+        <span class="nv">$type</span> <span class="o">=</span> <span class="s1">&#39;boolean&#39;</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="nv">$lead_attribute</span> <span class="o">=</span> <span class="k">new</span> <span class="k">stdClass</span><span class="p">;</span>
+      <span class="nv">$lead_attribute</span><span class="o">-&gt;</span><span class="na">attrName</span>  <span class="o">=</span> <span class="nv">$attribute</span><span class="p">;</span>
+      <span class="nv">$lead_attribute</span><span class="o">-&gt;</span><span class="na">attrValue</span> <span class="o">=</span> <span class="nv">$value</span><span class="p">;</span>
+      <span class="nv">$lead_attribute</span><span class="o">-&gt;</span><span class="na">attrType</span>  <span class="o">=</span> <span class="nv">$type</span><span class="p">;</span>
+      
+      <span class="nb">array_push</span><span class="p">(</span><span class="nv">$record</span><span class="o">-&gt;</span><span class="na">leadAttributeList</span><span class="o">-&gt;</span><span class="na">attribute</span><span class="p">,</span> <span class="nv">$lead_attribute</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nv">$record</span><span class="p">;</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Format Marketo lead object into something easier to work with</p>
+
+<p>$marketo<em>result - The result of a get</em>lead call</p>
+
+<p>Returns an array of formatted lead objects</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">protected</span> <span class="k">function</span> <span class="nf">format_leads</span><span class="p">(</span><span class="nv">$marketo_result</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="nv">$leads</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>One record comes back as an object but two comes as an array of objects, just make them both arrays of objects</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nb">is_object</span><span class="p">(</span><span class="nv">$marketo_result</span><span class="o">-&gt;</span><span class="na">result</span><span class="o">-&gt;</span><span class="na">leadRecordList</span><span class="o">-&gt;</span><span class="na">leadRecord</span><span class="p">))</span>
+    <span class="p">{</span>
+      <span class="nv">$marketo_result</span><span class="o">-&gt;</span><span class="na">result</span><span class="o">-&gt;</span><span class="na">leadRecordList</span><span class="o">-&gt;</span><span class="na">leadRecord</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="nv">$marketo_result</span><span class="o">-&gt;</span><span class="na">result</span><span class="o">-&gt;</span><span class="na">leadRecordList</span><span class="o">-&gt;</span><span class="na">leadRecord</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$marketo_result</span><span class="o">-&gt;</span><span class="na">result</span><span class="o">-&gt;</span><span class="na">leadRecordList</span><span class="o">-&gt;</span><span class="na">leadRecord</span> <span class="k">as</span> <span class="nv">$lead</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="nv">$lead</span><span class="o">-&gt;</span><span class="na">attributes</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flatten_attributes</span><span class="p">(</span><span class="nv">$lead</span><span class="o">-&gt;</span><span class="na">leadAttributeList</span><span class="o">-&gt;</span><span class="na">attribute</span><span class="p">);</span>
+      <span class="nb">unset</span><span class="p">(</span><span class="nv">$lead</span><span class="o">-&gt;</span><span class="na">leadAttributeList</span><span class="p">);</span>
+        
+      <span class="nb">array_push</span><span class="p">(</span><span class="nv">$leads</span><span class="p">,</span> <span class="nv">$lead</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nv">$leads</span><span class="p">;</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Helper for format_leads. Formats attribute objects to a simple 
+associative array</p>
+
+<p>$attributes - An array of attribute objects from a get_lead call</p>
+
+<p>Returns and array flattened array of attributes</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">protected</span> <span class="k">function</span> <span class="nf">flatten_attributes</span><span class="p">(</span><span class="nv">$attributes</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="nv">$php_types</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">&#39;integer&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;boolean&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">);</span>
+    <span class="nv">$attributes_array</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$attributes</span> <span class="k">as</span> <span class="nv">$attribute</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nb">in_array</span><span class="p">(</span><span class="nv">$attribute</span><span class="o">-&gt;</span><span class="na">attrType</span><span class="p">,</span> <span class="nv">$php_types</span><span class="p">))</span>
+      <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Cast marketo type to supported php types</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nb">settype</span><span class="p">(</span><span class="nv">$attribute</span><span class="o">-&gt;</span><span class="na">attrValue</span><span class="p">,</span> <span class="nv">$attribute</span><span class="o">-&gt;</span><span class="na">attrType</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nv">$attributes_array</span><span class="p">[</span><span class="nv">$attribute</span><span class="o">-&gt;</span><span class="na">attrName</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$attribute</span><span class="o">-&gt;</span><span class="na">attrValue</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nv">$attributes_array</span><span class="p">;</span>
+  <span class="p">}</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Creates a SOAP authentication header to be used in the SOAP request</p>
+
+<p>Returns a SoapHeader object</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">protected</span> <span class="k">function</span> <span class="nf">authentication_header</span><span class="p">()</span>
+  <span class="p">{</span>
+    <span class="nv">$timestamp</span>      <span class="o">=</span> <span class="nb">date</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">);</span>
+    <span class="nv">$encrypt_string</span> <span class="o">=</span> <span class="nv">$timestamp</span> <span class="o">.</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">user_id</span><span class="p">;</span>
+    <span class="nv">$signature</span>      <span class="o">=</span> <span class="nb">hash_hmac</span><span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">,</span> <span class="nv">$encrypt_string</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">encryption_key</span><span class="p">);</span>
+    
+    <span class="nv">$attrs</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+      <span class="s1">&#39;mktowsUserId&#39;</span>     <span class="o">=&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">user_id</span><span class="p">,</span>
+      <span class="s1">&#39;requestSignature&#39;</span> <span class="o">=&gt;</span> <span class="nv">$signature</span><span class="p">,</span>
+      <span class="s1">&#39;requestTimestamp&#39;</span> <span class="o">=&gt;</span> <span class="nv">$timestamp</span><span class="p">,</span>
+    <span class="p">);</span>
+    
+    <span class="nv">$header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SoapHeader</span><span class="p">(</span><span class="s1">&#39;http://www.marketo.com/mktows/&#39;</span><span class="p">,</span> <span class="s1">&#39;AuthenticationHeader&#39;</span><span class="p">,</span> <span class="nv">$attrs</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="nv">$header</span><span class="p">;</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Make a SOAP request to the Marketo API</p>
+
+<p>$operation - The name of the soap method being called
+$params    - The object to send with the request</p>
+
+<p>Returns the SOAP request result</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">protected</span> <span class="k">function</span> <span class="nf">request</span><span class="p">(</span><span class="nv">$operation</span><span class="p">,</span> <span class="nv">$params</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">soap_client</span><span class="o">-&gt;</span><span class="na">__soapCall</span><span class="p">(</span><span class="nv">$operation</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span><span class="nv">$params</span><span class="p">),</span> <span class="k">array</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">authentication_header</span><span class="p">());</span>
+  <span class="p">}</span>
+  
+<span class="p">}</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
