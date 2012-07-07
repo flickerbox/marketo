@@ -68,17 +68,19 @@ class Marketo
 	// 
 	// $type  - The type of ID you would like to look up the lead by. This can 
 	//          be one of the following:
-	//          idnum - The Marketo lead ID
-	//          cookie - The entire _mkto_trk cookie
-	//          email - The email address of the lead
-	//          sdfccontantid - The Salesforce Contact ID
-	//          sfdcleadid - The Salesforce Lead ID
+	//  
+	// - idnum - The Marketo lead ID
+	// - cookie - The entire _mkto_trk cookie
+	// - email - The email address of the lead
+	// - sdfccontantid - The Salesforce Contact ID
+	// - sfdcleadid - The Salesforce Lead ID
+	//
 	// $value - The value for the key. For example if the $type is email the 
 	//          $value should be and email address
 	// 
 	// Examples
 	// 
-	//   $client->get_lead_by('email', 'ben@benubois.com');
+	//    `$client->get_lead_by('email', 'ben@benubois.com');`
 	// 
 	// Returns an object containing lead data or FALSE if no lead was found
 	public function get_lead_by($type, $value)
@@ -119,7 +121,7 @@ class Marketo
 	// 
 	// Examples
 	// 
-	//   $client->sync_lead('ben@benubois.com', $_COOKIE['_mkto_trk'], array('Unsubscribe' -> FALSE));
+	// `$client->sync_lead('ben@benubois.com', $_COOKIE['_mkto_trk'], array('Unsubscribe' -> FALSE));`
 	// 
 	// Returns an object containing the updated lead info
 	public function sync_lead($email, $cookie, $lead)
