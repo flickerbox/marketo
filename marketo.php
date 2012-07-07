@@ -3,27 +3,16 @@
 // Client for the Marketo SOAP API
 class Marketo
 {
-	/**
-	 * Marketo API Access Key
-	 *
-	 * @var string
-	 */
+	// Internal: Marketo API Access Key
 	protected $user_id;
 
-	/**
-	 * Marketo API Secret Key
-	 *
-	 * @var string
-	 */
+	// Internal: Marketo API Secret Key
 	protected $encryption_key;
-
-	/**
-	 * The host name of the soap endpoint, i.e. na-c.marketo.com
-	 *
-	 * @var string
-	 */
+	
+	// Internal: The host name of the soap endpoint, i.e. na-c.marketo.com
 	protected $soap_host;
 	
+	// Public: Initialize a new Marketo API instance.
 	public function __construct()
 	{
 		
@@ -75,24 +64,27 @@ class Marketo
 		$this->soap_client = new soapClient($wsdl_url, $options);
 	}
 	
-	/**
-	 * get lead record information
-     * 
-	 * @param string $type this should be either:
-     * IDNUM - The Marketo lead ID
-     * COOKIE - The entire _mkto_trk cookie
-     * EMAIL - The email address of the lead
-     * SDFCCONTANTID - The Salesforce Contact ID
-	 * SFDCLEADID - The Salesforce Lead ID
-	 *
-	 * @param string $value - the lead id value
-     * 
-	 * @return object The Marketo lead record information
-	 **/
+	// Public: Get a lead record
+	// 
+	// $type  - The type of ID you would like to look up the lead by. This can 
+	//          be one of the following:
+	//          idnum - The Marketo lead ID
+	//          cookie - The entire _mkto_trk cookie
+	//          email - The email address of the lead
+	//          sdfccontantid - The Salesforce Contact ID
+	//          sfdcleadid - The Salesforce Lead ID
+	// $value - The value for the key. For example if the $type is email the 
+	//          $value should be and email address
+	// 
+	// Examples
+	// 
+	//   $client->get_lead_by('email', 'ben@benubois.com');
+	// 
+	// Returns an object containing lead data or FALSE if no lead was found
 	public function get_lead_by($type, $value)
 	{
 		$lead = array(
-			'leadKey' => array(
+				'leadKey' => array(
 				'keyType'  => strtoupper($type),
 				'keyValue' => $value
 			)
@@ -119,15 +111,17 @@ class Marketo
 		return $leads;
 	}
 	
-	/**
-	 * Send lead info to marketo
-     * 
-	 * @param string $email The email address of the lead
-	 * @param string $cookie - The entire _mkto_trk cookie
-	 * @param array $lead - Associative array of lead attributes
-     * 
-	 * @return object The Marketo lead record information
-	 **/
+	// Public: Create or update lead information
+	// 
+	// $email  - The email address of the lead
+	// $cookie - The entire _mkto_trk cookie
+	// $lead   - Associative array of lead attributes
+	// 
+	// Examples
+	// 
+	//   $client->sync_lead('ben@benubois.com', $_COOKIE['_mkto_trk'], array('Unsubscribe' -> FALSE));
+	// 
+	// Returns an object containing the updated lead info
 	public function sync_lead($email, $cookie, $lead)
 	{
 		$params = new stdClass;
@@ -144,14 +138,12 @@ class Marketo
 		return $result;
 	}
 	
-	/**
-	 * Build a lead object for syncing
-     * 
-	 * @param string $email The email address of the lead
-	 * @param array $lead - Associative array of lead attributes
-     * 
-	 * @return object The prepared lead object
-	 **/
+	// Build a lead object for syncing
+	// 
+	// $email - The email address of the lead
+	// $lead  - Associative array of lead attributes
+	// 
+	// Returns an object with the prepared
 	protected function lead_record($email, $lead_attributes)
 	{
 		$record = new stdClass;
@@ -181,13 +173,11 @@ class Marketo
 		return $record;
 	}
 	
-	/**
-	 * Format Marketo lead object into something easier to work with
-     * 
-	 * @param object $marketo_result The result of a get_lead call
-     * 
-	 * @return array of formatted lead objects
-	 **/
+	// Format Marketo lead object into something easier to work with
+	// 
+	// $marketo_result - The result of a get_lead call
+	// 
+	// Returns an array of formatted lead objects
 	protected function format_leads($marketo_result)
 	{
 		$leads = array();
@@ -209,13 +199,13 @@ class Marketo
 		return $leads;
 	}
 	
-	/**
-	 * Helper for format_leads. Formats attribute objects to simple associative array
-     * 
-	 * @param array $attributes An array of attribute objects from a get_lead call
-     * 
-	 * @return array flattened array of attributes
-	 **/
+	// Helper for format_leads. Formats attribute objects to a simple 
+	// associative array
+	// 
+	// $attributes - An array of attribute objects from a get_lead call
+	// 
+	// Returns and array flattened array of attributes
+	// 
 	protected function flatten_attributes($attributes)
 	{
 		$php_types = array('integer', 'string', 'boolean', 'float');
@@ -233,11 +223,9 @@ class Marketo
 		return $attributes_array;
 	}
 	
-	/**
-	 * Creates a SOAP authentication header to be used in the SOAP request
-     * 
-	 * @return object SoapHeader object
-	 **/
+	// Creates a SOAP authentication header to be used in the SOAP request
+	// 
+	// Returns a SoapHeader object
 	protected function authentication_header()
 	{
 		$timestamp      = date("c");
@@ -255,14 +243,12 @@ class Marketo
 		return $header;
 	}
 
-	/**
-	 * Make a SOAP request to the Marketo API
-     * 
-	 * @param string $operation The name of the soap method being called
-	 * @param object|array object or array of objects to send in the request
-     * 
-	 * @return object SOAP request result
-	 **/
+	// Make a SOAP request to the Marketo API
+	// 
+	// $operation - The name of the soap method being called
+	// $params    - The object to send with the request
+	// 
+	// Returns the SOAP request result
 	protected function request($operation, $params)
 	{
 		return $this->soap_client->__soapCall($operation, array($params), array(), $this->authentication_header());
