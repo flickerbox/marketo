@@ -1,10 +1,8 @@
-Marketo
--------
+# Marketo
 
 A simple Marketo SOAP client.
 
-Usage
-=====
+## Usage
 
 **Authentication**
 
