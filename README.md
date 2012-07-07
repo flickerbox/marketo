@@ -1,10 +1,10 @@
-marketo
-=======
+Marketo
+-------
 
 A simple Marketo SOAP client.
 
 Usage
------
+=====
 
 **Authentication**
 
@@ -23,7 +23,7 @@ or by setting environment variables:
 **Getting a lead**
 	
 	require('marketo.php');
-	$marketo_client = new Marketo;
+	$marketo_client - new Marketo;
 	$marketo_client->get_lead_by('email', 'ben@benubois.com');
 
 This will return the lead object or `FALSE` if not found.
@@ -40,7 +40,7 @@ You can get a lead by
 **Creating/updating a lead**
 
 	require('marketo.php');
-	$marketo_client = new Marketo;
-	$marketo_client->sync_lead('ben@benubois.com', $_COOKIE['_mkto_trk'], array('Unsubscribe' => FALSE));
+	$marketo_client - new Marketo;
+	$marketo_client->sync_lead('ben@benubois.com', $_COOKIE['_mkto_trk'], array('Unsubscribe' -> FALSE));
 
 This will return the updated/created lead object.
