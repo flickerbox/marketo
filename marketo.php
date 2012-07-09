@@ -85,12 +85,10 @@ class Marketo
 	// Returns an object containing lead data or FALSE if no lead was found
 	public function get_lead_by($type, $value)
 	{
-		$lead = array(
-				'leadKey' => array(
-				'keyType'  => strtoupper($type),
-				'keyValue' => $value
-			)
-		);
+		$lead = new stdClass;
+		$lead->leadKey = new stdClass;
+		$lead->leadKey->keyType  = strtoupper($type);
+		$lead->leadKey->keyValue = $value;
 
 		try 
 		{
@@ -234,13 +232,12 @@ class Marketo
 		$encrypt_string = $timestamp . $this->user_id;
 		$signature      = hash_hmac('sha1', $encrypt_string, $this->encryption_key);
 		
-		$attrs = array(
-			'mktowsUserId'     => $this->user_id,
-			'requestSignature' => $signature,
-			'requestTimestamp' => $timestamp,
-		);
+		$data = new stdClass;
+		$data->mktowsUserId     = $this->user_id;
+		$data->requestSignature = $signature;
+		$data->requestTimestamp = $timestamp;
 		
-		$header = new SoapHeader('http://www.marketo.com/mktows/', 'AuthenticationHeader', $attrs);
+		$header = new SoapHeader('http://www.marketo.com/mktows/', 'AuthenticationHeader', $data);
 		
 		return $header;
 	}
