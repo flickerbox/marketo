@@ -113,21 +113,27 @@ class Marketo
 	
 	// Public: Create or update lead information
 	// 
-	// $email  - The email address of the lead
-	// $cookie - The entire _mkto_trk cookie
-	// $lead   - Associative array of lead attributes
+	// $lead      - Associative array of lead attributes
+	// $lead_key  - Optional, The key being used to identify the lead, this can be either an email or Marketo ID
+	// $cookie    - Optional, The entire _mkto_trk cookie the lead will be associated with
 	// 
 	// Examples
 	// 
-	// `$client->sync_lead('ben@benubois.com', $_COOKIE['_mkto_trk'], array('Unsubscribe' -> FALSE));`
+	// When no $lead_key or $cookie is given a new lead will be created
 	// 
-	// Returns an object containing the updated lead info
-	public function sync_lead($email, $cookie, $lead)
+	// `$client->sync_lead(array('Email' => 'ben@benubois.com'));`
+	// 
+	// When a $lead_key or $cookie is specified, Marketo will attempt to identify the lead and update it
+	// 
+	// `$client->sync_lead(array('Unsubscribed' => FALSE), 'ben@benubois.com', $_COOKIE['_mkto_trk']);`
+	// 
+	// Returns an object containing the lead info
+	public function sync_lead($lead, $lead_key = NULL, $cookie = NULL)
 	{
 		$params = new stdClass;
 		$params->marketoCookie = $cookie;
 		$params->returnLead = TRUE;
-		$params->leadRecord = $this->lead_record($email, $lead);
+		$params->leadRecord = $this->lead_record($lead, $lead_key);
 			
 		$result = $this->request('syncLead', $params);
 		
@@ -140,14 +146,27 @@ class Marketo
 	
 	// Build a lead object for syncing
 	// 
-	// $email - The email address of the lead
-	// $lead  - Associative array of lead attributes
+	// $lead      - Associative array of lead attributes
+	// $lead_key  - Optional, The key being used to identify the lead, this can be either an email or Marketo ID
 	// 
-	// Returns an object with the prepared
-	protected function lead_record($email, $lead_attributes)
+	// Returns an object with the prepared lead
+	protected function lead_record($lead_attributes, $lead_key = NULL)
 	{
 		$record = new stdClass;
-		$record->Email = $email;
+		
+		// Identify the lead if it is known
+		if ($lead_key)
+		{
+			if (is_numeric($lead_key)) 
+			{
+				$leadRec->Id = $lead_key;
+			} 
+			else 
+			{
+				$record->Email = $lead_key;
+			}
+		}
+		
 		$record->leadAttributeList = new stdClass;
 		$record->leadAttributeList->attribute = array();
 
@@ -212,12 +231,15 @@ class Marketo
 		$attributes_array = array();
 		foreach ($attributes as $attribute)
 		{
-			if (in_array($attribute->attrType, $php_types))
+			if (is_object($attribute))
 			{
-				// Cast marketo type to supported php types
-				settype($attribute->attrValue, $attribute->attrType);
+				if (in_array($attribute->attrType, $php_types))
+				{
+					// Cast marketo type to supported php types
+					settype($attribute->attrValue, $attribute->attrType);
+				}
+				$attributes_array[$attribute->attrName] = $attribute->attrValue;
 			}
-			$attributes_array[$attribute->attrName] = $attribute->attrValue;
 		}
 		
 		return $attributes_array;
