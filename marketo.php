@@ -13,47 +13,11 @@ class Marketo
 	protected $soap_host;
 	
 	// Public: Initialize a new Marketo API instance.
-	public function __construct()
+	public function __construct($user_id, $encryption_key, $soap_host)
 	{
-		
-		if (defined('MARKETO_USER_ID'))
-		{
-			$this->user_id = MARKETO_USER_ID;
-		}
-		elseif (isset($_ENV['MARKETO_USER_ID']))
-		{
-			$this->user_id = $_ENV['MARKETO_USER_ID'];
-		}
-		else
-		{
-			throw new Exception("MARKETO_USER_ID missing", 1);
-		}
-		
-		if (defined('MARKETO_ENCRYPTION_KEY'))
-		{
-			$this->encryption_key = MARKETO_ENCRYPTION_KEY;
-		}
-		elseif (isset($_ENV['MARKETO_ENCRYPTION_KEY']))
-		{
-			$this->encryption_key = $_ENV['MARKETO_ENCRYPTION_KEY'];
-		}
-		else
-		{
-			throw new Exception("MARKETO_ENCRYPTION_KEY missing", 1);
-		}
-		
-		if (defined('MARKETO_SOAP_HOST'))
-		{
-			$this->soap_host = MARKETO_SOAP_HOST;
-		}
-		elseif (isset($_ENV['MARKETO_SOAP_HOST']))
-		{
-			$this->soap_host = $_ENV['MARKETO_SOAP_HOST'];
-		}
-		else
-		{
-			throw new Exception("MARKETO_SOAP_HOST missing", 1);
-		}
+		$this->user_id = $user_id;
+		$this->encryption_key = $encryption_key;
+		$this->soap_host = $soap_host;
 		
 		$soap_end_point = "https://{$this->soap_host}/soap/mktows/1_8";
 
@@ -159,7 +123,7 @@ class Marketo
 		{
 			if (is_numeric($lead_key)) 
 			{
-				$leadRec->Id = $lead_key;
+				$record->Id = $lead_key;
 			} 
 			else 
 			{
