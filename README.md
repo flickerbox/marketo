@@ -19,7 +19,7 @@ The credentials are passed directly to the class rather than looking for constan
 
 ### Getting a lead
 
-You can get a lead using the `get_lead_by` function.
+You can get a lead using the `get_lead_by` method.
 
 **Arguments**
 
@@ -41,7 +41,7 @@ This will return an array of lead objects or `FALSE` if not found. The result wi
 
 ### Creating or updating a lead
 
-You can create or update a lead using the `sync_lead` function.
+You can create or update a lead using the `sync_lead` method.
 
 **Arguments**
 
@@ -65,11 +65,11 @@ This will return the updated or created lead object.
 
 ### Adding leads to campaigns
 
-You can add leads to a campaign using the `add_to_campaign` function.
+You can add leads to a campaign using the `add_to_campaign` method.
 
 **Arguments**
 
-`$campaign_key` - Either the campaign id or the campaign name. You can get these from get_campaigns().
+`$campaign_key` - Either the campaign id or the campaign name. You can get these from `get_campaigns()`.
 
 `$leads` - An associative array with a key of lead id type and the corresponding value. This can also be an array of associative arrays. The available id types are:
 
@@ -96,13 +96,13 @@ Returns `TRUE` if successful `FALSE` if not
 
 ### Getting campaigns
 
-You can get available campaigns using the `get_campaigns` function.
+You can get available campaigns using the `get_campaigns` method.
 
 **Arguments**
 
 `$name` - Optional, the exact name of the campaign to get
 
-You would usually use this to figure out what campaigns are available when calling add_to_campaign()
+You would usually use this to figure out what campaigns are available when calling `add_to_campaign()`.
 
 Returns an object containing all the campaigns that are available to the API. Campaigns are only available to the API if they have a Campaign is Requested trigger where the Source is Web Service API.
 
