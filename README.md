@@ -25,11 +25,11 @@ You can get a lead using the `get_lead_by` method.
 
 `$type` - The type of ID you would like to look up the lead by. This can be one of the following:
 
- - idnum - The Marketo lead ID
- - cookie - The entire _mkto_trk cookie
- - email - The email address of the lead
- - sdfccontantid - The Salesforce Contact ID
- - sfdcleadid - The Salesforce Lead ID
+ - `idnum` - The Marketo lead ID
+ - `cookie` - The entire _mkto_trk cookie
+ - `email` - The email address of the lead
+ - `sdfccontantid` - The Salesforce Contact ID
+ - `sfdcleadid` - The Salesforce Lead ID
 
 `$value` - The value for the key. For example if the $type is email the $value should be and email address
 
@@ -57,7 +57,7 @@ When no $lead_key or $cookie is given a new lead will be created
 
 	$marketo_client->sync_lead(array('Email' => 'ben@benubois.com'));
 	
-When a $lead_key or $cookie is specified, Marketo will attempt to identify the lead and update it
+When a $lead_key or $cookie is specified, Marketo will attempt to identify the lead and update it. Sending the `_mkto_trk` cookie is important for associating the lead you're syncing with any information Marketo collected when the lead was anonymous.
 
 	$marketo_client->sync_lead(array('Unsubscribed' => FALSE), 'ben@benubois.com', $_COOKIE['_mkto_trk']);
 
@@ -73,9 +73,9 @@ You can add leads to a campaign using the `add_to_campaign` method.
 
 `$leads` - An associative array with a key of lead id type and the corresponding value. This can also be an array of associative arrays. The available id types are:
 
- - idnum - The Marketo lead ID
- - sdfccontantid - The Salesforce Contact ID
- - sfdcleadid - The Salesforce Lead ID
+ - `idnum` - The Marketo lead ID
+ - `sdfccontantid` - The Salesforce Contact ID
+ - `sfdcleadid` - The Salesforce Lead ID
 
 **Examples**
 
