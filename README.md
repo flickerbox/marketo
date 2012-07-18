@@ -13,7 +13,7 @@ You will need your SOAP user id and SOAP encryption key as well as the hostname 
 If you store configuration in the environment you would create a new instance like:
 
 	require('marketo.php');
-	$marketo_client = new Marketo($_ENV['MARKETO_USER_ID'], $_ENV['MARKETO_ENCRYPTION_KEY'], $_ENV['MARKETO_SOAP_HOST']);;
+	$marketo_client = new Marketo($_ENV['MARKETO_USER_ID'], $_ENV['MARKETO_ENCRYPTION_KEY'], $_ENV['MARKETO_SOAP_HOST']);
 	
 The credentials are passed directly to the class rather than looking for constants or keys stored in superglobals so you can connect to multiple Marketo instances.
 
