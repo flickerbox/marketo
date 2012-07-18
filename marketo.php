@@ -120,7 +120,7 @@ class Marketo
 	// calling add_to_campaign
 	// 
 	// Returns an object containing all the campaigns that are available from the API
-	function get_campaigns($name = NULL)
+	public function get_campaigns($name = NULL)
 	{
 		$params = new stdClass;
 		$params->source = 'MKTOWS';
@@ -161,7 +161,7 @@ class Marketo
 	//     $client->add_to_campaign(321, $leads);
 	// 
 	// Returns true if successful false if not
-	function add_to_campaign($campaign_key, $leads)
+	public function add_to_campaign($campaign_key, $leads)
 	{
 		$lead_keys = array();
 		foreach ($leads as $type => $value)
