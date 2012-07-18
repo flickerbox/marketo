@@ -1,6 +1,6 @@
 # Marketo
 
-A simple Marketo SOAP client.
+A simple Marketo PHP SOAP client.
 
 ## Usage
 
