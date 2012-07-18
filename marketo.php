@@ -139,7 +139,7 @@ class Marketo
 	// $campaign_key - Either the campaign id or the campaign name. You can get these 
 	// from get_campaigns().
 	// 
-	// $leads - An associtive array with a key of lead id type the lead id value. This 
+	// $leads - An associative array with a key of lead id type the lead id value. This 
 	// can also be an array of associative arrays. The available id types are:
 	// 
 	// - idnum - The Marketo lead ID
