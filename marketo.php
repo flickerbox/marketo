@@ -30,21 +30,21 @@ class Marketo
 	
 	// Public: Get a lead record
 	// 
-	// $type  - The type of ID you would like to look up the lead by. This can 
-	//          be one of the following:
-	//  
+	// $type - The type of ID you would like to look up the lead by. This can be one 
+	// of the following:
+	// 
 	// - idnum - The Marketo lead ID
 	// - cookie - The entire _mkto_trk cookie
 	// - email - The email address of the lead
 	// - sdfccontantid - The Salesforce Contact ID
 	// - sfdcleadid - The Salesforce Lead ID
-	//
-	// $value - The value for the key. For example if the $type is email the 
-	//          $value should be and email address
+	// 
+	// $value - The value for the key. For example if the $type is email the $value 
+	// should be and email address
 	// 
 	// Examples
 	// 
-	//    `$client->get_lead_by('email', 'ben@benubois.com');`
+	//  `$client->get_lead_by('email', 'ben@benubois.com');`
 	// 
 	// Returns an object containing lead data or FALSE if no lead was found
 	public function get_lead_by($type, $value)
@@ -77,9 +77,12 @@ class Marketo
 	
 	// Public: Create or update lead information
 	// 
-	// $lead      - Associative array of lead attributes
-	// $lead_key  - Optional, The key being used to identify the lead, this can be either an email or Marketo ID
-	// $cookie    - Optional, The entire _mkto_trk cookie the lead will be associated with
+	// $lead - Associative array of lead attributes
+	// 
+	// $lead_key - Optional, The key being used to identify the lead, this can be 
+	// either an email or Marketo ID
+	// 
+	// $cookie - Optional, The entire _mkto_trk cookie the lead will be associated with
 	// 
 	// Examples
 	// 
@@ -87,7 +90,8 @@ class Marketo
 	// 
 	// `$client->sync_lead(array('Email' => 'ben@benubois.com'));`
 	// 
-	// When a $lead_key or $cookie is specified, Marketo will attempt to identify the lead and update it
+	// When a $lead_key or $cookie is specified, Marketo will attempt to identify the 
+	// lead and update it
 	// 
 	// `$client->sync_lead(array('Unsubscribed' => FALSE), 'ben@benubois.com', $_COOKIE['_mkto_trk']);`
 	// 
@@ -112,7 +116,8 @@ class Marketo
 	// 
 	// $name - Optional, the exact name of the campaign to get
 	// 
-	// You would usually use this to figure out what campaigns are available when calling add_to_campaign
+	// You would usually use this to figure out what campaigns are available when 
+	// calling add_to_campaign
 	// 
 	// Returns an object containing all the campaigns that are available from the API
 	function get_campaigns($name = NULL)
@@ -192,8 +197,9 @@ class Marketo
 	
 	// Build a lead object for syncing
 	// 
-	// $lead      - Associative array of lead attributes
-	// $lead_key  - Optional, The key being used to identify the lead, this can be either an email or Marketo ID
+	// $lead - Associative array of lead attributes
+	// $lead_key - Optional, The key being used to identify the lead, this can be 
+	// either an email or Marketo ID
 	// 
 	// Returns an object with the prepared lead
 	protected function lead_record($lead_attributes, $lead_key = NULL)
@@ -247,7 +253,8 @@ class Marketo
 	{
 		$leads = array();
 		
-		// One record comes back as an object but two comes as an array of objects, just make them both arrays of objects
+		// One record comes back as an object but two comes as an array of objects, just 
+		// make them both arrays of objects
 		if (is_object($marketo_result->result->leadRecordList->leadRecord))
 		{
 			$marketo_result->result->leadRecordList->leadRecord = array($marketo_result->result->leadRecordList->leadRecord);
