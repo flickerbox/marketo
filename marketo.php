@@ -108,6 +108,88 @@ class Marketo
 		return $result;
 	}
 	
+	// Public: Get all available campaigns
+	// 
+	// $name - Optional, the exact name of the campaign to get
+	// 
+	// You would usually use this to figure out what campaigns are available when calling add_to_campaign
+	// 
+	// Returns an object containing all the campaigns that are available from the API
+	function get_campaigns($name = NULL)
+	{
+		$params = new stdClass;
+		$params->source = 'MKTOWS';
+
+		if ($name)
+		{
+			$params->name = '';
+			$params->exactName = TRUE;
+		}
+		
+		return $this->request('getCampaignsForSource', $params);
+	}
+	
+	// Public: Add leads to a campaign
+	// 
+	// $campaign_key - Either the campaign id or the campaign name. You can get these 
+	// from get_campaigns().
+	// 
+	// $leads - An associtive array with a key of lead id type the lead id value. This 
+	// can also be an array of associative arrays. The available id types are:
+	// 
+	// - idnum - The Marketo lead ID
+	// - sdfccontantid - The Salesforce Contact ID
+	// - sfdcleadid - The Salesforce Lead ID
+	// 
+	// Examples
+	// 
+	// Add one lead to a campaign
+	// 
+	//     $client->add_to_campaign(321, array('idnum' => '123456'));
+	// 
+	// Add multiple leads to a campaign with mixed id types
+	//
+	//     $leads = array(
+	//        array('idnum' => '123456'),
+	//        array('sfdcleadid' => '001d000000FXkBt')
+	//     );
+	//     $client->add_to_campaign(321, $leads);
+	// 
+	// Returns true if successful false if not
+	function add_to_campaign($campaign_key, $leads)
+	{
+		$lead_keys = array();
+		foreach ($leads as $type => $value)
+		{
+			if (is_array($value))
+			{
+				// Just getting the type and value into the right place
+				foreach ($value as $type => $value){}
+			}
+			
+			$lead_key = new stdClass;
+			$lead_key->keyType  = strtoupper($type);
+			$lead_key->keyValue = $value;
+			
+			array_push($lead_keys, $lead_key);
+		}
+		
+		$params  = new stdClass;
+		$params->leadList = $lead_keys;
+		$params->source = 'MKTOWS';
+		
+		if (is_numeric($campaign_key)) 
+		{
+			$params->campaignId = $campaign_key;
+		} 
+		else 
+		{
+			$params->campaignName = $campaign_key;
+		}
+		
+		return $this->request('requestCampaign', $params);
+	}
+	
 	// Build a lead object for syncing
 	// 
 	// $lead      - Associative array of lead attributes
