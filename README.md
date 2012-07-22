@@ -5,7 +5,7 @@ A PHP client for the Marketo SOAP API.
 ## Usage
 
  - [get_lead_by](#getting-a-lead)
- - [sync_lead](#creating-or-updating_a_lead)
+ - [sync_lead](#creating-or-updating-a-lead)
  - [add_to_campaign](#adding-leads-to-campaigns)
  - [get_campaigns](#getting-campaigns)
 
