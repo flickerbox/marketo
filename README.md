@@ -4,10 +4,10 @@ A PHP client for the Marketo SOAP API.
 
 ## Usage
 
- - [get_lead_by](#getting_a_lead)
- - [sync_lead](#creating_or_updating_a_lead)
- - [add_to_campaign](#adding_leads_to_campaigns)
- - [get_campaigns](#getting_campaigns)
+ - [get_lead_by](#getting-a-lead)
+ - [sync_lead](#creating-or-updating_a_lead)
+ - [add_to_campaign](#adding-leads-to-campaigns)
+ - [get_campaigns](#getting-campaigns)
 
 ### Authentication
 
@@ -27,7 +27,7 @@ The credentials are passed directly to the class rather than looking for constan
 
 ### Getting a lead
 
-You can get a lead using the `get_lead_by` method.
+You can get a lead using the `get_lead_by($type, $value)` method.
 
 **Arguments**
 
@@ -52,7 +52,7 @@ This will return an array of lead objects or `FALSE` if not found. The result wi
 
 ### Creating or updating a lead
 
-You can create or update a lead using the `sync_lead` method.
+You can create or update a lead using the `sync_lead($lead, $lead_key = NULL, $cookie = NULL)` method.
 
 **Arguments**
 
@@ -82,7 +82,7 @@ This will return the updated or created lead object.
 
 ### Adding leads to campaigns
 
-You can add leads to a campaign using the `add_to_campaign` method.
+You can add leads to a campaign using the `add_to_campaign($campaign_key, $leads)` method.
 
 **Arguments**
 
@@ -119,7 +119,7 @@ Returns `TRUE` if successful `FALSE` if not
 
 ### Getting campaigns
 
-You can get available campaigns using the `get_campaigns` method.
+You can get available campaigns using the `get_campaigns($campaign = NULL)` method.
 
 **Arguments**
 
