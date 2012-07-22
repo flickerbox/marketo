@@ -44,6 +44,7 @@ You can get a lead using the `get_lead_by` method.
 **Examples**
 
 ``` php
+<?php
 $marketo_client->get_lead_by('email', 'ben@benubois.com');
 ```
 
@@ -66,12 +67,14 @@ You can create or update a lead using the `sync_lead` method.
 When no $lead_key or $cookie is given a new lead will be created
 
 ``` php
+<?php
 $marketo_client->sync_lead(array('Email' => 'ben@benubois.com'));
 ```
 	
 When a $lead_key or $cookie is specified, Marketo will attempt to identify the lead and update it. Sending the `_mkto_trk` cookie is important for associating the lead you're syncing with any information Marketo collected when the lead was anonymous.
 
 ``` php
+<?php
 $marketo_client->sync_lead(array('Unsubscribed' => FALSE), 'ben@benubois.com', $_COOKIE['_mkto_trk']);
 ```
 
@@ -96,12 +99,14 @@ You can add leads to a campaign using the `add_to_campaign` method.
 Add one lead to a campaign
 
 ``` php
+<?php
 $client->add_to_campaign(321, array('idnum' => '123456'));
 ```
 
 Add multiple leads to a campaign with mixed id types
 
 ``` php
+<?php
 $leads = array(
    array('idnum' => '123456'),
    array('sfdcleadid' => '001d000000FXkBt')
@@ -127,5 +132,6 @@ Returns an object containing all the campaigns that are available to the API. Ca
 **Examples**
 
 ``` php
+<?php
 $marketo_client->get_campaigns();
 ```
