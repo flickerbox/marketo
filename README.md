@@ -117,6 +117,36 @@ $client->add_to_campaign(321, $leads);
 
 Returns `TRUE` if successful `FALSE` if not
 
+### Adding leads to campaigns with tokens
+
+You can add leads to a campaign using the `add_to_campaign_with_tokens($program_name, $campaign_name, $leads, $tokens)` method.
+
+**Arguments**
+
+`$program_name` - The Program name.
+
+`$campaign_name` - The campaign name. You can get this from `get_campaigns()`.
+
+`$leads` - An associative array with a key of lead id type and the corresponding value. This can also be an array of associative arrays. The available id types are:
+
+ - `idnum` - The Marketo lead ID
+ - `sdfccontantid` - The Salesforce Contact ID
+ - `sfdcleadid` - The Salesforce Lead ID
+
+**Examples**
+
+Add lead to a program named 'Send Email Resource' and campaign named 'Email Resource'
+
+``` php
+<?php
+$tokens = array(
+	'{{my.resource_name}}' => 'Free White Paper',
+	'{{my.resource_url}}' => 'http://example.com/white-paper',
+);
+
+$client->add_to_campaign('Send Email Resource', 'Email Resource', array('idnum' => '123456'), $tokens);
+```
+
 ### Getting campaigns
 
 You can get available campaigns using the `get_campaigns($campaign = NULL)` method.

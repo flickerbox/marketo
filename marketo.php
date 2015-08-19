@@ -195,6 +195,76 @@ class Marketo
 		return $this->request('requestCampaign', $params);
 	}
 	
+	// Public: Add leads to a campaign
+	// 
+	// $program_name - The Program name.
+	//
+	// $campaign_name - The campaign name. You can get this 
+	// from get_campaigns().
+	// 
+	// $leads - An associative array with a key of lead id type the lead id value. This 
+	// can also be an array of associative arrays. The available id types are:
+	// 
+	// - idnum - The Marketo lead ID
+	// - sdfccontantid - The Salesforce Contact ID
+	// - sfdcleadid - The Salesforce Lead ID
+	//
+	// $tokens - An associative array with a key of token name (including {{}}) and value
+	// of token value.
+	// 
+	// Examples
+	// 
+	// Add lead to a program named 'Send Email Resource' and campaign named 'Email Resource'
+	// 
+	//	   $tokens = array(
+	//         '{{my.resource_name}}' => 'Free White Paper',
+	//         '{{my.resource_url}}' => 'http://example.com/white-paper',
+	//	   );
+	//
+	//     $client->add_to_campaign('Send Email Resource', 'Email Resource', array('idnum' => '123456'), $tokens);
+	// 
+	// Returns true if successful false if not
+    public function add_to_campaign_with_tokens($program_name, $campaign_name, $leads, $tokens)
+    {
+        $lead_keys = array();
+        foreach ($leads as $type => $value)
+        {
+            if (is_array($value))
+            {
+                // Just getting the type and value into the right place
+                foreach ($value as $type => $value){}
+            }
+
+            $lead_key = new stdClass;
+            $lead_key->keyType  = strtoupper($type);
+            $lead_key->keyValue = $value;
+
+            array_push($lead_keys, $lead_key);
+        }
+
+        // Get the tokens into the right format
+        if (is_array($tokens))
+        {
+            $token_list = array();
+            foreach ($tokens as $token_key => $token_value) {
+                $token = new stdClass;
+                $token->name = $token_key;
+                $token->value = $token_value;
+
+                array_push($token_list, $token);
+            }
+        }
+
+        $params  = new stdClass;
+        $params->source = 'MKTOWS';
+        $params->programName = $program_name;
+        $params->campaignName = $campaign_name;
+        $params->leadList = $lead_keys;
+        $params->programTokenList = array("attrib" => $token_list);
+
+        return $this->request('requestCampaign', $params);
+    }
+	
 	// Build a lead object for syncing
 	// 
 	// $lead - Associative array of lead attributes
