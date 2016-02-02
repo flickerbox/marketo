@@ -22,7 +22,7 @@ If you store configuration in the environment you would create a new instance li
 require('marketo.php');
 $marketo_client = new Marketo($_ENV['MARKETO_USER_ID'], $_ENV['MARKETO_ENCRYPTION_KEY'], $_ENV['MARKETO_SOAP_HOST']);
 ```
-	
+
 The credentials are passed directly to the class rather than looking for constants or keys stored in superglobals so you can connect to multiple Marketo instances.
 
 ### Getting a lead
@@ -70,7 +70,7 @@ When no $lead_key or $cookie is given a new lead will be created
 <?php
 $marketo_client->sync_lead(array('Email' => 'ben@benubois.com'));
 ```
-	
+
 When a $lead_key or $cookie is specified, Marketo will attempt to identify the lead and update it. Sending the `_mkto_trk` cookie is important for associating the lead you're syncing with any information Marketo collected when the lead was anonymous.
 
 ``` php
@@ -82,7 +82,7 @@ This will return the updated or created lead object.
 
 ### Adding leads to campaigns
 
-You can add leads to a campaign using the `add_to_campaign($campaign_key, $leads)` method.
+You can add leads to a campaign using the `add_to_campaign($campaign_key, $leads, $program_name = NULL, $tokens = NULL)` method.
 
 **Arguments**
 
@@ -93,6 +93,10 @@ You can add leads to a campaign using the `add_to_campaign($campaign_key, $leads
  - `idnum` - The Marketo lead ID
  - `sdfccontantid` - The Salesforce Contact ID
  - `sfdcleadid` - The Salesforce Lead ID
+
+`$program_name` - Optional, the Program Name
+
+`$tokens` - Optional, an associative array with a key of token name (including {{}}) and value of token value.
 
 **Examples**
 
@@ -111,8 +115,25 @@ $leads = array(
    array('idnum' => '123456'),
    array('sfdcleadid' => '001d000000FXkBt')
 );
-	
+
 $client->add_to_campaign(321, $leads);
+```
+
+Add lead to a campaign named 'Email Resource' and a program named 'Send Email Resource'
+
+``` php
+<?php
+$tokens = array(
+	'{{my.resource_name}}' => 'Free White Paper',
+	'{{my.resource_url}}' => 'http://example.com/white-paper',
+);
+
+$leads = array(
+   array('idnum' => '123456'),
+   array('sfdcleadid' => '001d000000FXkBt')
+);
+
+$client->add_to_campaign('Email Resource', $leads, 'Send Email Resource', $tokens);
 ```
 
 Returns `TRUE` if successful `FALSE` if not
