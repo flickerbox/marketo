@@ -145,11 +145,11 @@ class Marketo
 	// - idnum - The Marketo lead ID
 	// - sdfccontantid - The Salesforce Contact ID
 	// - sfdcleadid - The Salesforce Lead ID
-    //
-    // $program_name - Optional, the Program Name
-    //
-    // $tokens - Optional, an associative array with a key of token name (including {{}}) and value
-    // of token value.
+	//
+	// $program_name - Optional, the Program Name
+	//
+	// $tokens - Optional, an associative array with a key of token name (including {{}}) and value
+	// of token value.
 	//
 	// Examples
 	//
@@ -197,21 +197,21 @@ class Marketo
 			$params->campaignName = $campaign_key;
 		}
 
-        // Get tokens into the right format:
-        if ($tokens && is_array($tokens) && $program_name)
-        {
-            $token_list = array();
-            foreach ($tokens as $token_key => $token_value) {
-                $token = new stdClass;
-                $token->name = $token_key;
-                $token->value = $token_value;
+		// Get tokens into the right format:
+		if ($tokens && is_array($tokens) && $program_name)
+		{
+			$token_list = array();
+			foreach ($tokens as $token_key => $token_value) {
+				$token = new stdClass;
+				$token->name = $token_key;
+				$token->value = $token_value;
 
-                array_push($token_list, $token);
-            }
+				array_push($token_list, $token);
+			}
 
-            $params->programName = $program_name;
-            $params->programTokenList = array("attrib" => $token_list);
-        }
+			$params->programName = $program_name;
+			$params->programTokenList = array("attrib" => $token_list);
+		}
 
 		return $this->request('requestCampaign', $params);
 	}
