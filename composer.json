@@ -9,5 +9,10 @@
             "email": "ben@benubois.com"
         }
     ],
+    "autoload": {
+        "psr-0": {
+            "Flickerbox\\Marketo": "src/"
+        }
+    },
     "require": {}
 }
