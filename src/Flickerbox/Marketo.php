@@ -1,5 +1,7 @@
 <?php
 
+namespace Flickerbox;
+
 // This is the annotated source for [marketo](http://github.com/flickerbox/marketo), a simple Marketo SOAP client.
 class Marketo
 {
