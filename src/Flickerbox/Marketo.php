@@ -1,5 +1,12 @@
 <?php
 
+namespace Flickerbox;
+
+use \stdClass;
+use SoapClient;
+use SoapHeader;
+use Exception;
+
 // This is the annotated source for [marketo](http://github.com/flickerbox/marketo), a simple Marketo SOAP client.
 class Marketo
 {
@@ -25,7 +32,7 @@ class Marketo
 
 		$wsdl_url = $soap_end_point . '?WSDL';
 
-		$this->soap_client = new soapClient($wsdl_url, $options);
+		$this->soap_client = new SoapClient($wsdl_url, $options);
 	}
 
 	// Public: Get a lead record
