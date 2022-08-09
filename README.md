@@ -9,9 +9,31 @@ A PHP client for the Marketo SOAP API.
  - [add_to_campaign](#adding-leads-to-campaigns)
  - [get_campaigns](#getting-campaigns)
 
-### Authentication
+### Installation
 
-The first thing you'll want to do is include the marketo class and create a new instance of the client.
+This repo is not published on Packagist, so please reference it directly as a repository in your `package.json`:
+```
+"repositories": [
+	{
+		"type": "package",
+		"package": {
+			"name": "flickerbox/marketo",
+			"version": "1.0.0",
+			"type": "library",
+			"source": {
+				"url": "https://github.com/flickerbox/marketo.git",
+				"type": "git",
+				"reference": "main"
+			}
+		}
+	}
+],
+"require": {
+	"flickerbox/marketo": "^1",
+}
+```
+
+### Authentication
 
 You will need your SOAP user id and SOAP encryption key as well as the hostname for your Marketo API endpoint. These can be found in the Admin -> SOAP section when logged into [app.marketo.com](http://app.marketo.com/).
 
@@ -19,7 +41,7 @@ If you store configuration in the environment you would create a new instance li
 
 ``` php
 <?php
-require('marketo.php');
+require __DIR__ . '/vendor/autoload.php';
 $marketo_client = new Marketo($_ENV['MARKETO_USER_ID'], $_ENV['MARKETO_ENCRYPTION_KEY'], $_ENV['MARKETO_SOAP_HOST']);
 ```
 
